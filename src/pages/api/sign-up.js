@@ -4,8 +4,8 @@ import UserModel from "@/api/db/models/UserModel"
 
 const handler = mw({
   POST: async (req, res) => {
-    const { email, password } = req.body
-    const user = await UserModel.query().findOne({ email })
+    const { username, email, password } = req.body
+    const user = await UserModel.query().findOne({ username, email })
 
     if (user) {
       res.send({ result: true })
@@ -16,6 +16,7 @@ const handler = mw({
     const [passwordHash, passwordSalt] = hashPassword(password)
 
     await UserModel.query().insert({
+      username,
       email,
       passwordHash,
       passwordSalt,

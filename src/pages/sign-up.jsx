@@ -9,6 +9,7 @@ import Form from "@/web/components/Form"
 import useAppContext from "@/web/hooks/useAppContext"
 
 const initialValues = {
+  username: "",
   email: "",
   password: "",
 }
@@ -17,8 +18,8 @@ const SignUpPage = () => {
   const router = useRouter()
   const { signUp } = useAppContext()
   const handleSubmit = useCallback(
-    async ({ email, password }) => {
-      await signUp({ email, password })
+    async ({ username, email, password }) => {
+      await signUp({ username, email, password })
 
       router.push("/sign-in")
     },
@@ -29,6 +30,11 @@ const SignUpPage = () => {
     <Page>
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <Form>
+          <FormField
+            name="username"
+            placeholder="Enter your username"
+            type="text"
+          />
           <FormField
             name="email"
             placeholder="Enter your e-mail"

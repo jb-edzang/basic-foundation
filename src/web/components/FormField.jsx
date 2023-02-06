@@ -6,7 +6,7 @@ const FormField = (props) => {
 
   return (
     <label className={clsx("flex flex-col gap-2", className)}>
-      <span className="text-sm font-medium">{label}</span>
+      {label && <span className="text-sm font-medium">{label}</span>}
       <Field
         name={name}
         {...otherProps}

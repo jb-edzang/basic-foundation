@@ -42,11 +42,11 @@ export const AppContextProvider = (props) => {
     },
     [update]
   )
-  const signUp = useCallback(async ({ email, password }) => {
+  const signUp = useCallback(async ({ username, email, password }) => {
     try {
       const {
         data: { result },
-      } = await api.post("/sign-up", { email, password })
+      } = await api.post("/sign-up", { username, email, password })
 
       return [null, result]
     } catch (err) {
@@ -54,11 +54,11 @@ export const AppContextProvider = (props) => {
     }
   }, [])
   const signIn = useCallback(
-    async ({ email, password }) => {
+    async ({ username, email, password }) => {
       try {
         const {
           data: { result: jwt },
-        } = await api.post("/sign-in", { email, password })
+        } = await api.post("/sign-in", { username, email, password })
 
         localStorage.setItem(LOCALSTORAGE_JWT_KEY, jwt)
         updateSession(jwt)
@@ -70,6 +70,24 @@ export const AppContextProvider = (props) => {
     },
     [updateSession]
   )
+  const signOut = useCallback(() => {
+    localStorage.removeItem(LOCALSTORAGE_JWT_KEY)
+    updateSession(null)
+  }, [updateSession])
+  const createPost = async ({ title, content }) => {
+    try {
+      const {
+        data: { result: jwt },
+      } = await api.post("/posts", { title, content })
+
+      localStorage.setItem(LOCALSTORAGE_JWT_KEY, jwt)
+      updateSession(jwt)
+
+      return [null, jwt]
+    } catch (err) {
+      return [getApiError(err), null]
+    }
+  }
 
   useEffect(() => {
     const jwt = localStorage.getItem(LOCALSTORAGE_JWT_KEY)
@@ -92,6 +110,8 @@ export const AppContextProvider = (props) => {
         state,
         signUp,
         signIn,
+        signOut,
+        createContext,
       }}
     />
   )

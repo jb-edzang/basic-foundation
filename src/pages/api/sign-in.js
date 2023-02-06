@@ -7,7 +7,9 @@ import mw from "@/api/mw"
 const handler = mw({
   POST: async (req, res) => {
     const { email, password } = req.body
-    const user = await UserModel.query().findOne({ email })
+    const user = await UserModel.query()
+      .findOne({ email })
+      .orWhere({ username: email })
 
     if (!user) {
       res.status(401).send({ error: "Invalid credentials" })
